@@ -1,5 +1,7 @@
 from django.http import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render
+
+from photos.forms import PhotoForm
 from photos.models import Photo, VISIBILITY_PUBLIC
 
 
@@ -31,3 +33,25 @@ def photo_detail(request, pk):
     photo = possible_photos[0]
     context = {'photo': photo}
     return render(request, 'photos/photo_detail.html', context)
+
+
+def photo_creation(request):
+    """
+    Presenta el formulario para crear una foto y en caso de que la petición sea POST la valida
+    y la crea en caso de que sea válida
+    :param request: objeto HttpRequest con los datos de la petición
+    :return: objeto HttpResponse con los datos de la respuesta
+    """
+    message = None
+    if request.method == "POST":
+        photo_with_user = Photo(owner=request.user)
+        photo_form = PhotoForm(request.POST, instance=photo_with_user)
+        if photo_form.is_valid():
+            new_photo = photo_form.save()
+            photo_form = PhotoForm()
+            message = 'Foto creada satisfactoriamente <a href="/photos/{0}">Ver foto</a>'.format(new_photo.pk)
+    else:
+        photo_form = PhotoForm()
+
+    context = {'form': photo_form, 'message': message}
+    return render(request, 'photos/photo_creation.html', context)
