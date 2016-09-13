@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -77,11 +78,10 @@ class PhotoCreationView(View):
         return render(request, 'photos/photo_creation.html', context)
 
 
-class PhotoListView(ListView):
+class PhotoListView(LoginRequiredMixin, ListView):
 
     model = Photo
     template_name = 'photos/photo_list.html'
 
-    def get(self, request):
-        result = super().get(request)
-        return result
+    def get_queryset(self):
+        return super().get_queryset().filter(owner=self.request.user)
