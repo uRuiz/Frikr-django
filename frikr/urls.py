@@ -21,11 +21,11 @@ from users.views import LogoutView, LoginView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^login$', LoginView.as_view()),
-    url(r'^logout$', LogoutView.as_view()),
+    url(r'^login$', LoginView.as_view(), name='users_login'),
+    url(r'^logout$', LogoutView.as_view(), name='users_logout'),
 
-    url(r'^create$', PhotoCreationView.as_view()),
-    url(r'^photos/$', PhotoListView.as_view()),
-    url(r'^photos/(?P<pk>[0-9]+)$', PhotoDetailView.as_view()),
-    url(r'^$', HomeView.as_view())
+    url(r'^create$', PhotoCreationView.as_view(), name='photos_create'),
+    url(r'^photos/$', PhotoListView.as_view(), name='photos_my_photos'),
+    url(r'^photos/(?P<pk>[0-9]+)$', PhotoDetailView.as_view(), name='photos_detail'),
+    url(r'^$', HomeView.as_view(), name='photos_home')
 ]
