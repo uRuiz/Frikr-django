@@ -9,10 +9,9 @@ class PhotoListAPI(ListCreateAPIView):
     Endpoint de listado y creación de fotos
     """
     queryset = Photo.objects.all()
-    serializer_class = PhotoListSerializer
 
     def get_serializer_class(self):
-        return super().get_serializer_class()
+        return PhotoSerializer if self.request.method == 'POST' else PhotoListSerializer
 
 
 class PhotoDetailAPI(RetrieveUpdateDestroyAPIView):
